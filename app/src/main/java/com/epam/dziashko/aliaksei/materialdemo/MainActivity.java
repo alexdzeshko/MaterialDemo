@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.epam.dziashko.aliaksei.materialdemo.fragment.GridFragment;
+import com.epam.dziashko.aliaksei.materialdemo.fragment.RecyclerViewFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -58,6 +59,19 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void selectRecycler(View view) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new RecyclerViewFragment())
+                .commit();
+        mDrawerLayout.closeDrawers();
+    }
+
+    public void selectGrid(View view) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new GridFragment())
+                .commit();
+        mDrawerLayout.closeDrawers();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

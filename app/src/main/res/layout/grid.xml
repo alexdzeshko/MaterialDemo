@@ -8,6 +8,7 @@
     android:stretchMode="columnWidth"
     android:horizontalSpacing="8dp"
     android:verticalSpacing="8dp"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:clipToPadding="false">
 
 </GridView>

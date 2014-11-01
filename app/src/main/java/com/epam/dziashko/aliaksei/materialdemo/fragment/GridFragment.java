@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.epam.dziashko.aliaksei.materialdemo.BuildConfig;
 import com.epam.dziashko.aliaksei.materialdemo.R;
 import com.epam.dziashko.aliaksei.materialdemo.adapter.BaseArrayAdapter;
 import com.epam.dziashko.aliaksei.materialdemo.data.Data;
@@ -26,6 +27,7 @@ import java.util.WeakHashMap;
 public class GridFragment extends Fragment {
 
     public static class PaletteTransformation implements Transformation {
+
         private static final PaletteTransformation INSTANCE = new PaletteTransformation();
         private static final Map<Bitmap, Palette> CACHE = new WeakHashMap<Bitmap, Palette>();
 
@@ -54,7 +56,7 @@ public class GridFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.grid, container);
+        View view = inflater.inflate(R.layout.grid, container, false);
         return view;
     }
 
@@ -75,6 +77,7 @@ public class GridFragment extends Fragment {
                         .transform(PaletteTransformation.instance())
                         .into(imageView, new Callback.EmptyCallback() {
                             @Override public void onSuccess() {
+                                if(BuildConfig.VERSION_CODE<21)return;
                                 Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
                                 Palette palette = PaletteTransformation.getPalette(bitmap);
 

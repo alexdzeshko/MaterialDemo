@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<style name="AppTheme" parent="android:Theme.Material.Light">-->
-    <!--</style>-->
+    <style name="AppTheme" parent="android:Theme.Material.Light">
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="android:colorPrimary">@color/primary</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="android:colorPrimaryDark">@color/primaryDark</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
 </resources>

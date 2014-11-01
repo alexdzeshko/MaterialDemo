@@ -23,15 +23,48 @@
             android:layout_height="match_parent"/>
 
         <!-- The navigation drawer -->
-        <ListView
+        <LinearLayout
             android:id="@+id/left_drawer"
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:choiceMode="singleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
-            android:background="@color/primaryLight"/>
+            android:orientation="vertical"
+            android:background="@color/primaryLight">
+
+            <TextView
+                android:id="@+id/item_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Basic ListView"
+                android:layout_margin="16dp"
+                android:onClick="selectGrid"/>
+            <TextView
+                android:id="@+id/item_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RecyclerView"
+                android:layout_margin="16dp"
+                android:onClick="selectRecycler"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="Awesomeness!"/>
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cool radio button"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nice checkbox"/>
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>
