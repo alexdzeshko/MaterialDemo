@@ -1,19 +1,25 @@
 package com.epam.dziashko.aliaksei.materialdemo.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.epam.dziashko.aliaksei.materialdemo.BuildConfig;
+import com.epam.dziashko.aliaksei.materialdemo.DetailActivity;
 import com.epam.dziashko.aliaksei.materialdemo.R;
 import com.epam.dziashko.aliaksei.materialdemo.adapter.BaseArrayAdapter;
 import com.epam.dziashko.aliaksei.materialdemo.data.Data;
@@ -24,7 +30,7 @@ import com.squareup.picasso.Transformation;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class GridFragment extends Fragment {
+public class GridFragment extends Fragment implements AdapterView.OnItemClickListener {
 
     public static class PaletteTransformation implements Transformation {
 
@@ -62,6 +68,7 @@ public class GridFragment extends Fragment {
 
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         GridView gridView = (GridView) view.findViewById(R.id.grid);
+        gridView.setOnItemClickListener(this);
         gridView.setAdapter(new BaseArrayAdapter<String>(getActivity(), Data.getImageList(50)) {
             @Override public View newView(String model, ViewGroup viewGroup) {
                 return View.inflate(getContext(), R.layout.grid_item, null);
@@ -77,8 +84,9 @@ public class GridFragment extends Fragment {
                         .transform(PaletteTransformation.instance())
                         .into(imageView, new Callback.EmptyCallback() {
                             @Override public void onSuccess() {
-                                if(BuildConfig.VERSION_CODE<21)return;
+
                                 Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
+
                                 Palette palette = PaletteTransformation.getPalette(bitmap);
 
 
@@ -97,9 +105,9 @@ public class GridFragment extends Fragment {
                                 view.findViewById(R.id.mutedD).setBackgroundColor(darkMutedSwatch != null ? darkMutedSwatch.getRgb() : 0);
                                 view.findViewById(R.id.mutedL).setBackgroundColor(lightMutedSwatch != null ? lightMutedSwatch.getRgb() : 0);
 
-                                if (lightVibrantSwatch != null) {
+                                if (lightVibrantSwatch != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     int bgColor = lightVibrantSwatch.getRgb();
-                                    view.findViewById(R.id.card_view).setBackgroundColor(bgColor);
+                                    ((CardView) view.findViewById(R.id.card_view)).setBackgroundColor(bgColor);// Oh.. java.lang.ClassCastException: android.graphics.drawable.ColorDrawable cannot be cast to android.support.v7.widget.RoundRectDrawableWithShadow
                                 }
                                 if (vibrantSwatch != null) {
                                     int titleColor = vibrantSwatch.getRgb();
@@ -109,9 +117,24 @@ public class GridFragment extends Fragment {
                                     int bodyColor = darkVibrantSwatch.getRgb();
                                     ((TextView) view.findViewById(R.id.text1)).setTextColor(bodyColor);
                                 }
+
                             }
                         });
             }
         });
     }
+
+    @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String url = (String) parent.getItemAtPosition(position);
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra("data", url);
+
+        String transitionName = getString(R.string.tranzition_robo);
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, transitionName);
+
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+
 }

@@ -1,20 +1,18 @@
 package com.epam.dziashko.aliaksei.materialdemo.fragment;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.epam.dziashko.aliaksei.materialdemo.DetailActivity;
 import com.epam.dziashko.aliaksei.materialdemo.R;
 import com.epam.dziashko.aliaksei.materialdemo.data.Data;
 import com.squareup.picasso.Callback;
@@ -62,6 +61,8 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
     }
 
     @Override
@@ -101,6 +102,7 @@ public class RecyclerViewFragment extends Fragment {
         private List<String> mDataset;
         private Context mContext;
 
+
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
         // you provide access to all the views for a data item in a view holder
@@ -129,9 +131,10 @@ public class RecyclerViewFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
-            Resources r = getContext().getResources();
+            /*Resources r = getContext().getResources();
             int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
-            v.setPadding(0,0,0,px);
+            v.setPadding(0,0,0,px);*/
+
             ViewHolder vh = new ViewHolder(v);
             return vh;
         }
@@ -139,20 +142,32 @@ public class RecyclerViewFragment extends Fragment {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-            String model = getItem(position);
+            final String model = getItem(position);
 
             Log.d("CAT", model);
             final ImageView imageView = holder.mImageView;
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    Intent intent = new Intent(mContext, DetailActivity.class);
+                    intent.putExtra(DetailActivity.EXTRA_DATA, model);
+                    String transitionName = mContext.getString(R.string.tranzition_robo);
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((android.app.Activity) mContext, v, transitionName);
+
+                    ActivityCompat.startActivity((android.app.Activity) mContext, intent, options.toBundle());
+                }
+            });
 
             Picasso.with(getContext())
                     .load(model)
                     .transform(GridFragment.PaletteTransformation.instance())
                     .into(imageView, new Callback.EmptyCallback() {
                         @Override public void onSuccess() {
-                            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
+                            /*Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
                             Palette palette = GridFragment.PaletteTransformation.getPalette(bitmap);
 
 
@@ -161,7 +176,7 @@ public class RecyclerViewFragment extends Fragment {
                             Palette.Swatch lightVibrantSwatch = palette.getLightVibrantSwatch();
                             Palette.Swatch mutedSwatch = palette.getMutedSwatch();
                             Palette.Swatch darkMutedSwatch = palette.getDarkMutedSwatch();
-                            Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
+                            Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();*/
 
 
                             /*holder.itemView.findViewById(R.id.vibrant).setBackgroundColor(vibrantSwatch != null ? vibrantSwatch.getRgb() : 0);
