@@ -105,17 +105,23 @@ public class GridFragment extends Fragment implements AdapterView.OnItemClickLis
                                 view.findViewById(R.id.mutedD).setBackgroundColor(darkMutedSwatch != null ? darkMutedSwatch.getRgb() : 0);
                                 view.findViewById(R.id.mutedL).setBackgroundColor(lightMutedSwatch != null ? lightMutedSwatch.getRgb() : 0);
 
-                                if (lightVibrantSwatch != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    int bgColor = lightVibrantSwatch.getRgb();
+                                int bgColor = lightVibrantSwatch != null?lightVibrantSwatch.getRgb():0;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     ((CardView) view.findViewById(R.id.card_view)).setBackgroundColor(bgColor);// Oh.. java.lang.ClassCastException: android.graphics.drawable.ColorDrawable cannot be cast to android.support.v7.widget.RoundRectDrawableWithShadow
+                                } else {
+                                    imageView.setBackgroundColor(bgColor);
                                 }
                                 if (vibrantSwatch != null) {
                                     int titleColor = vibrantSwatch.getRgb();
-                                    ((TextView) view.findViewById(R.id.text2)).setTextColor(titleColor);
+                                    TextView title = (TextView) view.findViewById(R.id.text2);
+                                    title.setTextColor(titleColor);
+                                    title.setBackgroundColor(bgColor);
                                 }
                                 if (darkVibrantSwatch != null) {
                                     int bodyColor = darkVibrantSwatch.getRgb();
-                                    ((TextView) view.findViewById(R.id.text1)).setTextColor(bodyColor);
+                                    TextView body = (TextView) view.findViewById(R.id.text1);
+                                    body.setTextColor(bodyColor);
+                                    body.setBackgroundColor(bgColor);
                                 }
 
                             }

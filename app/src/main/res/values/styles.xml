@@ -16,6 +16,7 @@
         <!--<item name="textColorPrimary">@color/textPrimary</item>-->
         <!-- You can also set colorControlNormal, colorControlActivated
              colorControlHighlight, and colorSwitchThumbNormal. -->
+
     </style>
 
 </resources>

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +26,6 @@ import android.widget.TextView;
 import com.epam.dziashko.aliaksei.materialdemo.DetailActivity;
 import com.epam.dziashko.aliaksei.materialdemo.R;
 import com.epam.dziashko.aliaksei.materialdemo.data.Data;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -33,8 +33,9 @@ import java.util.List;
 public class RecyclerViewFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private AwesomeAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private View mFabView;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,20 @@ public class RecyclerViewFragment extends Fragment {
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        mFabView = view.findViewById(R.id.fab);
 
+        mAdapter.setOnItemClickListener(new OnItemClick() {
+            @Override public void onItemClicked(View view, int position, Object data) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(DetailActivity.EXTRA_DATA, (String)data);
+                String transitionName = getString(R.string.tranzition_robo);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), new Pair<View, String>(view.findViewById(R.id.image), transitionName),
+                        new Pair<View, String>(mFabView, "fab"));
+
+                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            }
+        });
     }
 
     @Override
@@ -102,6 +116,11 @@ public class RecyclerViewFragment extends Fragment {
         private List<String> mDataset;
         private Context mContext;
 
+        private OnItemClick mListener;
+
+        public void setOnItemClickListener(OnItemClick listener) {
+            mListener = listener;
+        }
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
@@ -110,6 +129,7 @@ public class RecyclerViewFragment extends Fragment {
             // each data item is just a string in this case
             public ImageView mImageView;
             public TextView mTextViewTitle, mTextViewBody;
+
             public ViewHolder(View view) {
                 super(view);
                 mImageView = (ImageView) view.findViewById(R.id.image);
@@ -131,10 +151,6 @@ public class RecyclerViewFragment extends Fragment {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
             // set the view's size, margins, paddings and layout parameters
 
-            /*Resources r = getContext().getResources();
-            int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, r.getDisplayMetrics());
-            v.setPadding(0,0,0,px);*/
-
             ViewHolder vh = new ViewHolder(v);
             return vh;
         }
@@ -147,59 +163,33 @@ public class RecyclerViewFragment extends Fragment {
             // - replace the contents of the view with that element
             final String model = getItem(position);
 
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    mListener.onItemClicked(v, position, model);
+                }
+            });
+
+
             Log.d("CAT", model);
             final ImageView imageView = holder.mImageView;
 
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    Intent intent = new Intent(mContext, DetailActivity.class);
-                    intent.putExtra(DetailActivity.EXTRA_DATA, model);
-                    String transitionName = mContext.getString(R.string.tranzition_robo);
-
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((android.app.Activity) mContext, v, transitionName);
-
-                    ActivityCompat.startActivity((android.app.Activity) mContext, intent, options.toBundle());
-                }
-            });
+//            imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override public void onClick(View v) {
+//                    Intent intent = new Intent(mContext, DetailActivity.class);
+//                    intent.putExtra(DetailActivity.EXTRA_DATA, model);
+//                    String transitionName = mContext.getString(R.string.tranzition_robo);
+//
+//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((android.app.Activity) mContext, new Pair<View, String>(v, transitionName),
+//                            new Pair<View, String>());
+//
+//                    ActivityCompat.startActivity((android.app.Activity) mContext, intent, options.toBundle());
+//                }
+//            });
 
             Picasso.with(getContext())
                     .load(model)
                     .transform(GridFragment.PaletteTransformation.instance())
-                    .into(imageView, new Callback.EmptyCallback() {
-                        @Override public void onSuccess() {
-                            /*Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap(); // Ew!
-                            Palette palette = GridFragment.PaletteTransformation.getPalette(bitmap);
-
-
-                            Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-                            Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
-                            Palette.Swatch lightVibrantSwatch = palette.getLightVibrantSwatch();
-                            Palette.Swatch mutedSwatch = palette.getMutedSwatch();
-                            Palette.Swatch darkMutedSwatch = palette.getDarkMutedSwatch();
-                            Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();*/
-
-
-                            /*holder.itemView.findViewById(R.id.vibrant).setBackgroundColor(vibrantSwatch != null ? vibrantSwatch.getRgb() : 0);
-                            holder.itemView.findViewById(R.id.vibrantD).setBackgroundColor(darkVibrantSwatch != null ? darkVibrantSwatch.getRgb() : 0);
-                            holder.itemView.findViewById(R.id.vibrantL).setBackgroundColor(lightVibrantSwatch != null ? lightVibrantSwatch.getRgb() : 0);
-                            holder.itemView.findViewById(R.id.muted).setBackgroundColor(mutedSwatch != null ? mutedSwatch.getRgb() : 0);
-                            holder.itemView.findViewById(R.id.mutedD).setBackgroundColor(darkMutedSwatch != null ? darkMutedSwatch.getRgb() : 0);
-                            holder.itemView.findViewById(R.id.mutedL).setBackgroundColor(lightMutedSwatch != null ? lightMutedSwatch.getRgb() : 0);
-
-                            if (lightVibrantSwatch != null) {
-                                int bgColor = lightVibrantSwatch.getRgb();
-                                holder.itemView.findViewById(R.id.card_view).setBackgroundColor(bgColor);
-                            }
-                            if (vibrantSwatch != null) {
-                                int titleColor = vibrantSwatch.getRgb();
-                                holder.mTextViewTitle.setTextColor(titleColor);
-                            }
-                            if (darkVibrantSwatch != null) {
-                                int bodyColor = darkVibrantSwatch.getRgb();
-                                holder.mTextViewBody.setTextColor(bodyColor);
-                            }*/
-                        }
-                    });
+                    .into(imageView);
         }
 
         private String getItem(int position) {
@@ -216,5 +206,9 @@ public class RecyclerViewFragment extends Fragment {
         public int getItemCount() {
             return mDataset.size();
         }
+    }
+
+    public interface OnItemClick {
+        public void onItemClicked(View view, int position, Object data);
     }
 }

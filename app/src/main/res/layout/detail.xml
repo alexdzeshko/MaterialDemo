@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/detail_image"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_height="112dp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:transitionName="@string/tranzition_robo"/>
-</LinearLayout>
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Title"
+        app:subtitle="subtitle"/>
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_gravity="end|top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        android:layout_marginRight="16dp"
+        card_view:cardCornerRadius="2dp">
+
+        <ImageView
+            android:id="@+id/detail_image"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:transitionName="@string/tranzition_robo"
+            android:layout_margin="8dp"/>
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:id="@+id/fab"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginLeft="16dp"
+        android:layout_gravity="top|start"
+        android:background="@drawable/circle"
+        android:elevation="4dp"
+        android:transitionName="fab"/>
+</FrameLayout>
