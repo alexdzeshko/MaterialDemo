@@ -10,8 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.epam.dziashko.aliaksei.materialdemo.fragment.GridFragment;
+import com.epam.dziashko.aliaksei.materialdemo.fragment.PagerFragment;
 import com.epam.dziashko.aliaksei.materialdemo.fragment.RecyclerViewFragment;
+import com.epam.dziashko.aliaksei.materialdemo.fragment.ToolbarFragment;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -31,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new GridFragment())
+                    .add(R.id.container, new PagerFragment())
                     .commit();
         }
 
@@ -68,7 +69,14 @@ public class MainActivity extends ActionBarActivity {
 
     public void selectGrid(View view) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, new GridFragment())
+                .replace(R.id.container, new PagerFragment())
+                .commit();
+        mDrawerLayout.closeDrawers();
+    }
+
+    public void selectToolbar(View view) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, new ToolbarFragment())
                 .commit();
         mDrawerLayout.closeDrawers();
     }
